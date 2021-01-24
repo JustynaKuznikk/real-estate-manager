@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:include="elements/header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User edit</title>
 </head>
 <body>
-
+<div  sec:authorize="hasRole('ROLE_ADMIN')">
+<h1>Edit user:</h1>
+<h2 th:text="${userEdit.username}">Edit user</h2>
+<div>
+    <form th:action="${userEdit.id}" th:method="post" th:object="${editUserCommand}">
+        <fieldset>
+            <div>
+                <label>Username:
+                    <input type="text" th:value="${userEdit.username}"
+                           id="username" name="username" required>
+                </label>
+                <div th:if="${#fields.hasErrors('username')}">
+                    <span th:each="err : ${#fields.errors('username')}" th:text="${err}"></span>
+                </div>
+            </div>
+            <div>
+                <label>User e-mail:
+                    <input type="email" th:value="${userEdit.userEmail}"
+                           id="userEmail" name="userEmail" required>
+                </label>
+                <div th:if="${#fields.hasErrors('userEmail')}">
+                    <span th:each="err : ${#fields.errors('userEmail')}" th:text="${err}"></span>
+                </div>
+            </div>
+            <div>
+                <label>Is active:
+                    <select id="isActive" name="isActive">
+                        <option
+                                value="true"
+                                th:selected="${userEdit.isActive eq true}"
+                                th:text="ACTIVE">
+                        </option>
+                        <option
+                                value="false"
+                                th:selected="${userEdit.isActive eq false}"
+                                th:text="INACTIVE">
+                        </option>
+                    </select>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <button type="submit">Submit changes</button>
+        </fieldset>
+    </form>
+</div>
+<fieldset>
+    <form th:action="|${userEdit.id}/delete|" th:method="post">
+        <button type="submit">Delete</button>
+    </form>
+</fieldset>
+</div>
 </body>
 </html>

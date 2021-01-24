@@ -1,17 +1,20 @@
 package projects.realestatemanager.domain.model;
 
 import lombok.*;
+import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "buildings")
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-@ToString
-@EqualsAndHashCode(of = {"street", "building_number"})
+@ToString (exclude = "apartments")
+@EqualsAndHashCode(of = {"street", "buildingNumber"})
 public class Building {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +23,9 @@ public class Building {
     //todo lista regionów
     @Column(nullable = false)
     private String region;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     //todo lista miast
     @Column(nullable = false)
@@ -62,27 +68,33 @@ public class Building {
     @Column(name = "building_location_details")
     private String buildingLocationDetails;
 
-    @Column(nullable = false, name = "is_parking_available")
-    private boolean isParkingAvailable;
+    @Column(name = "is_parking_available")
+    private Boolean isParkingAvailable;
 
-    @Column(nullable = false, name = "is_garage_available")
-    private boolean isGarageAvailable;
+    @Column(name = "is_garage_available")
+    private Boolean isGarageAvailable;
+
+    @Column(name = "is_elevator_available")
+    private Boolean isElevatorAvailable;
+
+    //todo enum yes/no/not given?
+    @Column(name = "is_connected_to_media")
+    private Boolean isConnectedToMedia;
 
     @Column(nullable = false, name = "building_construction_type")
     private String buildingConstructionType;
 
-    //todo relation or class embedable (słownik nazw)
     @ManyToOne
     @JoinColumn(name = "developer_id")
-    @Column(nullable = false)
     private Developer developer;
 
-    @Column(nullable = false, name = "is_elevator_available")
-    private boolean isElevatorAvailable;
+    private String developerName;
 
+    @Column(name = "is_primary_market")
+    private Boolean isPrimaryMarket;
 
-    @Column(nullable = false, name = "is_primary_market")
-    private boolean isPrimaryMarket;
+    @Column(nullable = false, name = "number_of_apartments")
+    private Integer numberOfApartments;
 
     @Column(name = "building_section")
     private Integer buildingSection;
@@ -90,17 +102,20 @@ public class Building {
     @Column(nullable = false, name = "building_realization_term")
     private LocalDate buildingRealizationTerm;
 
-    @Column(nullable = false, name = "is_building_finished")
-    private boolean isBuildingFinished;
-
-    //todo enum yes/no/not given?
-    @Column(nullable = false, name = "is_connected_to_media")
-    private boolean isConnectedToMedia;
 
     //todo Object with photo???
     private String photosUrl;
 
-    @OneToMany(mappedBy = "buildings")
-    private List<Apartment> apartments;
+    @Column(nullable = false, name = "creation_date")
+    private LocalDate creationDate;
+
+    @Column(name = "edit_date")
+    private LocalDate editDate;
+
+    @OneToMany(mappedBy = "building")
+    private Set<Apartment> apartments = new HashSet<>();
+
+    @ManyToMany(mappedBy = "buildings")
+    private Set<User> users = new HashSet<>();
 
 }

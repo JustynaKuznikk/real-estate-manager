@@ -1,16 +1,22 @@
 package projects.realestatemanager.domain.model;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "clients")
 @Data @AllArgsConstructor @NoArgsConstructor @Builder
-@EqualsAndHashCode(of = {"client_name", "client_registration_date"})
-@ToString
+@EqualsAndHashCode(of = {"clientName", "clientRegistrationDate"})
+@ToString(exclude = "user")
 public class Client {
 
     @Id
@@ -34,9 +40,9 @@ public class Client {
     private String clientInterest;
 
     @Column(nullable = false, name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 
     @ManyToMany
     @JoinColumn(name = "user_id")
-    private List<User> user;
+    private Set<User> users = new HashSet<>();
 }

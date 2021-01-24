@@ -1,10 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:include="elements/header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit developer</title>
 </head>
 <body>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+<h1>Edit developer</h1>
+<h2 th:text="${developerEdit.name}"></h2>
 
+<div>
+    <form
+            th:action="${developerEdit.id}"
+            th:method="post"
+            th:object="${editDeveloperCommand}">
+        <fieldset>
+            <div>
+                <label>Developer name:
+                    <input type="text"
+                           th:value="${developerEdit.name}"
+                           id="developerName"
+                           name="developerName"
+                           required/>
+                </label>
+                <div
+                        th:if="${#fields.hasErrors('developerName')}"
+                        th:text="${#fields.errors('developerName')}">
+                </div>
+                <div>
+                    <label>Contact person:
+                        <input type="text"
+                               th:value="${developerEdit.contactPerson}"
+                               id="developerContactPerson"
+                               name="developerContactPerson"
+                               required/>
+                        <div
+                                th:if="${#fields.hasErrors('developerContactPerson')}"
+                                th:text="${#fields.errors('developerContactPerson')}">
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <label>Mobile number:
+                        <input type="text"
+                               th:value="${developerEdit.contactNumber}"
+                               id="developerContactNumber"
+                               name="developerContactNumber"
+                               required/>
+                        <div
+                                th:if="${#fields.hasErrors('developerContactNumber')}"
+                                th:text="${#fields.errors('developerContactNumber')}">
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <label>Developer status:
+                        <select id="isActive" name="isActive">
+                            <option
+                                    value="true"
+                                    th:selected="${developerEdit.isActive() eq true}"
+                                    th:text="Active">
+                            </option>
+                            <option
+                                    value="false"
+                                    th:selected="${developerEdit.isActive() eq false}"
+                                    th:text="|Not active|">
+                            </option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <button type="submit">Save changes</button>
+        </fieldset>
+    </form>
+</div>
+<fieldset>
+    <form th:action="|${developerEdit.id}/delete|" th:method="post">
+        <button type="submit">Delete</button>
+    </form>
+</fieldset>
+</div>
 </body>
 </html>

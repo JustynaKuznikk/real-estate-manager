@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:include="elements/header">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User list</title>
 </head>
 <body>
-
+<div>
+    <h2  sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{/users/add}">Add new user</a>
+    </h2>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+        </tr>
+        <tr th:each="user : ${usersList}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.userEmail}"></td>
+            <td th:text="${user.isActive} ? 'active' : 'not active'"
+                th:style="${user.isActive} ? 'color: red' : 'color: grey'">
+            </td>
+            <td><a th:href="|edit/${user.id}|">Edit</a></td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
